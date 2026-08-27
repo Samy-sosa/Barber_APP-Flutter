@@ -4,7 +4,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../services/auth_service.dart';
-import '../barbershop/barbershop_list_screen.dart';
+import '../../presentation/screens/tenant_admin/admin_home_screen.dart';
+import '../../presentation/screens/client/home_screen.dart';
+import '../../presentation/screens/super_admin/super_admin_home_screen.dart'; // ✅ AGREGADO
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response != null) {
         print('✅ Login exitoso: ${response.name}');
+        print('🔑 Rol del usuario: ${response.role}');
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -55,10 +58,26 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const BarbershopListScreen()),
-          );
+          // ✅ REDIRECCIÓN POR ROL
+          if (response.role == 'TENANT_ADMIN') {
+            print('➡️ Redirigiendo a TENANT_ADMIN');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const AdminHomeScreen()),
+            );
+          } else if (response.role == 'SUPER_ADMIN') {
+            print('➡️ Redirigiendo a SUPER_ADMIN');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const SuperAdminHomeScreen()),
+            );
+          } else {
+            print('➡️ Redirigiendo a CLIENT');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
+            );
+          }
         }
       } else {
         print('❌ Login fallido');

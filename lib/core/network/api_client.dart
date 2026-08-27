@@ -60,11 +60,61 @@ class ApiClient {
     return response;
   }
 
+  // ✅ NUEVO: PATCH
+  Future<http.Response> patch(String url, Map<String, dynamic> body, {bool isAuthRequired = true}) async {
+    print('📱 PATCH: $url');
+    print('📱 Body: $body');
+
+    final headers = await _getHeaders(isAuthRequired: isAuthRequired);
+    print('📱 Headers: $headers');
+
+    final response = await http.patch(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(body),
+    ).timeout(const Duration(seconds: 15));
+
+    print('📱 PATCH Status: ${response.statusCode}');
+    print('📱 PATCH Response: ${response.body}');
+    return response;
+  }
+
   Future<http.Response> delete(String url, {bool isAuthRequired = true}) async {
     print('📱 DELETE: $url');
     final headers = await _getHeaders(isAuthRequired: isAuthRequired);
     final response = await http.delete(Uri.parse(url), headers: headers);
     print('📱 DELETE Status: ${response.statusCode}');
+    return response;
+  }
+
+  // ✅ NUEVO: MULTIPART (para subir archivos)
+  Future<http.Response> multipart(
+      String url, {
+        required List<http.MultipartFile> files,
+        Map<String, String>? fields,
+        bool isAuthRequired = true,
+      }) async {
+    print('📱 MULTIPART: $url');
+
+    final headers = await _getHeaders(isAuthRequired: isAuthRequired);
+    headers.remove('Content-Type'); // Multipart lo maneja automáticamente
+
+    final request = http.MultipartRequest('POST', Uri.parse(url));
+    request.headers.addAll(headers);
+
+    if (fields != null) {
+      request.fields.addAll(fields);
+    }
+
+    for (final file in files) {
+      request.files.add(file);
+    }
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    print('📱 MULTIPART Status: ${response.statusCode}');
+    print('📱 MULTIPART Response: ${response.body}');
     return response;
   }
 }

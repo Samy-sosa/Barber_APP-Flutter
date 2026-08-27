@@ -6,6 +6,7 @@ class AuthResponse {
   final String name;
   final String email;
   final String role;
+  final int? barbershopId; // ✅ AGREGAR
 
   AuthResponse({
     required this.token,
@@ -13,6 +14,7 @@ class AuthResponse {
     required this.name,
     required this.email,
     required this.role,
+    this.barbershopId, // ✅ AGREGAR
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class AuthResponse {
       name: json['name'] ?? json['fullName'] ?? '',
       email: json['email'] ?? '',
       role: json['role'] ?? 'CLIENT',
+      barbershopId: json['barbershopId'], // ✅ AGREGAR
     );
   }
 
@@ -32,6 +35,7 @@ class AuthResponse {
       'name': name,
       'email': email,
       'role': role,
+      'barbershopId': barbershopId, // ✅ AGREGAR
     };
   }
 }

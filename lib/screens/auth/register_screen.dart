@@ -1,9 +1,12 @@
+// lib/screens/auth/register_screen.dart
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../models/auth/register_request.dart';
 import '../../services/auth_service.dart';
-import '../barbershop/barbershop_list_screen.dart';
+// ✅ IMPORTACIÓN AGREGADA PARA IR AL PANEL DE ADMIN
+import '../../presentation/screens/tenant_admin/admin_home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -55,9 +58,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (mounted) {
       if (result != null) {
+        // ✅ NAVEGACIÓN CORREGIDA: Va directo al panel de administración
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const BarbershopListScreen()),
+          MaterialPageRoute(builder: (_) => const AdminHomeScreen()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
